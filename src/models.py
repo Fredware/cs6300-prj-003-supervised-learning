@@ -1,5 +1,6 @@
 import nn
 
+
 class PerceptronModel(object):
     def __init__(self, dimensions):
         """
@@ -42,12 +43,14 @@ class PerceptronModel(object):
         """
         "*** YOUR CODE HERE ***"
 
+
 class RegressionModel(object):
     """
     A neural network model for approximating a function that maps from real
     numbers to real numbers. The network should be sufficiently large to be able
     to approximate sin(x) on the interval [-2pi, 2pi] to reasonable precision.
     """
+
     def __init__(self):
         # Initialize your model parameters here
         "*** YOUR CODE HERE ***"
@@ -81,6 +84,7 @@ class RegressionModel(object):
         """
         "*** YOUR CODE HERE ***"
 
+
 class DigitClassificationModel(object):
     """
     A model for handwritten digit classification using the MNIST dataset.
@@ -95,6 +99,7 @@ class DigitClassificationModel(object):
     methods here. We recommend that you implement the RegressionModel before
     working on this part of the project.)
     """
+
     def __init__(self):
         # Initialize your model parameters here
         "*** YOUR CODE HERE ***"
@@ -136,6 +141,7 @@ class DigitClassificationModel(object):
         """
         "*** YOUR CODE HERE ***"
 
+
 class LanguageIDModel(object):
     """
     A model for language identification at a single-word granularity.
@@ -144,6 +150,7 @@ class LanguageIDModel(object):
     methods here. We recommend that you implement the RegressionModel before
     working on this part of the project.)
     """
+
     def __init__(self):
         # Our dataset contains words from five different languages, and the
         # combined alphabets of the five languages contain a total of 47 unique
