@@ -123,32 +123,29 @@ class RegressionModel(object):
         """
         "*** YOUR CODE HERE ***"
         batch_size = 5
-        alpha = -1e-4
-        first_iteration = True
+        alpha = -1e-3
 
         min_loss = np.inf
-        prev_loss = np.inf
-        while min_loss > 0.001:
+        while min_loss > 0.00005:
             for x, y in dataset.iterate_once(batch_size):
                 loss = self.get_loss(x, y)
-                if nn.as_scalar(loss)<=prev_loss+0.25:
-                    grad_w1, grad_b1, grad_w2, grad_b2, grad_w3, grad_b3, grad_w4, grad_b4 = nn.gradients(loss,
-                                                                                        [
-                                                                                            self.w1, self.b1,
-                                                                                            self.w2, self.b2,
-                                                                                            self.w3, self.b3,
-                                                                                            self.w4, self.b4
-                                                                                        ])
-                    self.w1.update(grad_w1, alpha)
-                    self.b1.update(grad_b1, alpha)
-                    self.w2.update(grad_w2, alpha)
-                    self.b2.update(grad_b2, alpha)
-                    self.w3.update(grad_w3, alpha)
-                    self.b3.update(grad_b3, alpha)
-                    self.w4.update(grad_w4, alpha)
-                    self.b4.update(grad_b4, alpha)
-                    print(nn.as_scalar(loss))
-                    prev_loss = nn.as_scalar(loss)
+                # if nn.as_scalar(loss)<=prev_loss+0.25:
+                grad_w1, grad_b1, grad_w2, grad_b2, grad_w3, grad_b3, grad_w4, grad_b4 = nn.gradients(loss,
+                                                                                    [
+                                                                                        self.w1, self.b1,
+                                                                                        self.w2, self.b2,
+                                                                                        self.w3, self.b3,
+                                                                                        self.w4, self.b4
+                                                                                    ])
+                self.w1.update(grad_w1, alpha)
+                self.b1.update(grad_b1, alpha)
+                self.w2.update(grad_w2, alpha)
+                self.b2.update(grad_b2, alpha)
+                self.w3.update(grad_w3, alpha)
+                self.b3.update(grad_b3, alpha)
+                self.w4.update(grad_w4, alpha)
+                self.b4.update(grad_b4, alpha)
+                # print(nn.as_scalar(loss))
                 min_loss = min(min_loss, nn.as_scalar(loss))
 
 
