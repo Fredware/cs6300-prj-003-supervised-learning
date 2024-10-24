@@ -168,6 +168,10 @@ class DigitClassificationModel(object):
     def __init__(self):
         # Initialize your model parameters here
         "*** YOUR CODE HERE ***"
+        self.w1 = nn.Parameter(784, 1000)
+        self.b1 = nn.Parameter(1, 1000)
+        self.w2 = nn.Parameter(1000, 10)
+        self.b2 = nn.Parameter(1, 10)
 
     def run(self, x):
         """
