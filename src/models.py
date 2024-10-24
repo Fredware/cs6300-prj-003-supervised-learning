@@ -82,6 +82,7 @@ class RegressionModel(object):
         """
         "*** YOUR CODE HERE ***"
 
+
     def get_loss(self, x, y):
         """
         Computes the loss for a batch of examples.
