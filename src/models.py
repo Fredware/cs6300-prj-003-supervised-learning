@@ -171,9 +171,10 @@ class DigitClassificationModel(object):
     def __init__(self):
         # Initialize your model parameters here
         "*** YOUR CODE HERE ***"
-        h1 = 1500
-        h2 = 20
-        h3 = 100
+        h1 = 200
+        h2 = 100
+        h3 = 30
+        h4 = 15
 
         self.w1 = nn.Parameter(784, h1)
         self.b1 = nn.Parameter(1, h1)
@@ -184,8 +185,11 @@ class DigitClassificationModel(object):
         self.w3 = nn.Parameter(h2, h3)
         self.b3 = nn.Parameter(1, h3)
 
-        self.w4 = nn.Parameter(h3, 10)
-        self.b4 = nn.Parameter(1, 10)
+        self.w4 = nn.Parameter(h3, h4)
+        self.b4 = nn.Parameter(1, h4)
+
+        self.w5 = nn.Parameter(h4, 10)
+        self.b5 = nn.Parameter(1, 10)
 
     def run(self, x):
         """
@@ -205,7 +209,8 @@ class DigitClassificationModel(object):
         z1 = nn.ReLU(nn.AddBias(nn.Linear(x, self.w1), self.b1))
         z2 = nn.ReLU(nn.AddBias(nn.Linear(z1, self.w2), self.b2))
         z3 = nn.ReLU(nn.AddBias(nn.Linear(z2, self.w3), self.b3))
-        y_pred = nn.AddBias(nn.Linear(z3, self.w4), self.b4)
+        z4 = nn.ReLU(nn.AddBias(nn.Linear(z3, self.w4), self.b4))
+        y_pred = nn.AddBias(nn.Linear(z4, self.w5), self.b5)
         return y_pred
 
     def get_loss(self, x, y):
@@ -244,7 +249,7 @@ class DigitClassificationModel(object):
 
                 val_acc = dataset.get_validation_accuracy()
                 # print(val_acc)
-                if val_acc > 0.9725:
+                if val_acc > 0.973:
                     return
                 elif val_acc > 0.970:
                     alpha = -5e-3
@@ -255,7 +260,7 @@ class DigitClassificationModel(object):
                 elif val_acc > 0.450:
                     alpha = -5e-1
                 else:
-                    alpha = -6e-1
+                    alpha = -5.5e-1
 
 
                 self.w1.update(grad_w1, alpha)
