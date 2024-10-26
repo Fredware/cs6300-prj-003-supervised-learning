@@ -240,12 +240,16 @@ class DigitClassificationModel(object):
             for x, y in dataset.iterate_once(batch_size):
                 loss = self.get_loss(x, y)
                 grad_w1, grad_b1, grad_w2, grad_b2, grad_w3, grad_b3, grad_w4, grad_b4 = nn.gradients(loss,
-                             [
-                                 self.w1, self.b1,
-                                 self.w2, self.b2,
-                                 self.w3, self.b3,
-                                 self.w4, self.b4
-                             ])
+                                                                                                      [
+                                                                                                          self.w1,
+                                                                                                          self.b1,
+                                                                                                          self.w2,
+                                                                                                          self.b2,
+                                                                                                          self.w3,
+                                                                                                          self.b3,
+                                                                                                          self.w4,
+                                                                                                          self.b4
+                                                                                                      ])
 
                 val_acc = dataset.get_validation_accuracy()
                 # print(val_acc)
@@ -261,7 +265,6 @@ class DigitClassificationModel(object):
                     alpha = -5e-1
                 else:
                     alpha = -5.5e-1
-
 
                 self.w1.update(grad_w1, alpha)
                 self.b1.update(grad_b1, alpha)
@@ -292,6 +295,11 @@ class LanguageIDModel(object):
 
         # Initialize your model parameters here
         "*** YOUR CODE HERE ***"
+        d = 100
+        self.W = nn.Parameter(self.num_chars, d)
+        self.W_hidden = nn.Parameter(d, d)
+        self.W_out = nn.Parameter(d, len(self.languages))
+        self.b_out = nn.Parameter(1, len(self.languages))
 
     def run(self, xs):
         """
@@ -323,6 +331,14 @@ class LanguageIDModel(object):
                 (also called logits)
         """
         "*** YOUR CODE HERE ***"
+        for i, x in enumerate(xs):
+            if i == 0:
+                z = nn.ReLU(nn.Linear(x, self.W))
+            else:
+                z = nn.ReLU(nn.Add(nn.Linear(x, self.W), nn.Linear(z, self.W_hidden)))
+        # print(z)
+        y = nn.AddBias(nn.Linear(z, self.W_out), self.b_out)
+        return y
 
     def get_loss(self, xs, y):
         """
@@ -339,9 +355,29 @@ class LanguageIDModel(object):
         Returns: a loss node
         """
         "*** YOUR CODE HERE ***"
+        return nn.SoftmaxLoss(self.run(xs), y)
 
     def train(self, dataset):
         """
         Trains the model.
         """
         "*** YOUR CODE HERE ***"
+        alpha = -1e-2
+        batch_size = 10
+        while True:
+            for x, y in dataset.iterate_once(batch_size):
+                loss = self.get_loss(x, y)
+                val_acc = dataset.get_validation_accuracy()
+                if val_acc > 0.90:
+                    return
+                grad_w, grad_w_hidden, grad_w_out, grad_b_out = nn.gradients(loss,
+                                                                             [
+                                                                                 self.W,
+                                                                                 self.W_hidden,
+                                                                                 self.W_out,
+                                                                                 self.b_out
+                                                                             ])
+                self.W.update(grad_w, alpha)
+                self.W_hidden.update(grad_w_hidden, alpha)
+                self.W_out.update(grad_w_out, alpha)
+                self.b_out.update(grad_b_out, alpha)
